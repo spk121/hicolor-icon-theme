@@ -50,25 +50,26 @@ for, so the theme needs to provide those names.
 - `folder` exists at 22px only as `22x22/actions/folder.png`, which is the
   wrong context for it.
 
-### `index.theme` problems
+### `index.theme` (merged with upstream `index_update.theme`)
 
-- `64x64apps` is a typo for `64x64/apps`, so `64x64/apps` is never looked at.
-- These directories are listed but don't exist: `8x8/emblems`,
-  `11x11/emblems`, `22x22/categories`, `22x22/places`, `64x64/categories`.
-- These directories exist but aren't listed, so they are ignored:
-  `22x22/apps`, `22x22/mimetypes`, `48x48/actions`, `64x64/apps`.
-- All `*/categories` sections have `Context=Animations`. It should be
-  `Categories`.
-- There is a `[scalable/categories]` section but no directory, and it has
-  `Context=FileSystems`.
-- `Comment=` still says "KDE Classic Icon Theme".
+`index.theme` now combines our old file with upstream's `index_update.theme`:
+- **Directories and sections:** only upstream's plain (scale-1) directories at
+  the sizes this repository uses (16, 22, 24, 32, 48 and 64). That is all
+  24 upstream contexts at each size (actions … status, `stock/*`), 144 in
+  total. Every directory on disk is now listed. The old typo `64x64apps` and
+  the wrong `Context=Animations` on categories are gone.
+- **Dropped:** upstream's `@2` (HiDPI), `scalable/*`, `symbolic/*`, 36, 72, 96,
+  128, 192, 256 and 512 directories, and our old `8x8/emblems`,
+  `11x11/emblems` and `scalable/categories`.
+- **`[Icon Theme]` header:** upstream's `Name`, `Comment` and `Hidden`, plus
+  our KDE keys (`DisplayDepth`, `*Overlay`, `*Default`/`*Sizes`).
 
 ## Plan
 
 ### Phase 0: Infrastructure
-- [ ] Fix `index.theme` as described above, and add sections for each new
-      directory (`*/status`, `22x22/places`, `22x22/categories`,
-      `22x22/devices`, `64x64/devices`, …).
+- [x] Merge `index.theme` with upstream (done). Create the missing
+      directories it lists as files get added (`*/status`, `22x22/places`,
+      `22x22/categories`, `22x22/devices`, `64x64/devices`, …).
 - [ ] Add a check script (shell or Python) that:
       - compares the spec name tables with what is on disk,
       - flags images whose pixel size doesn't match their directory,
